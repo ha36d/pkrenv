@@ -6,7 +6,7 @@ RUN apk add --no-cache --purge \
     curl \
     ;
 
-ARG PKRENV_VERSION=3.0.0
+ARG PKRENV_VERSION=0.0.1
 RUN wget -O /tmp/pkrenv.tar.gz "https://github.com/ha36d/pkrenv/archive/refs/tags/v${PKRENV_VERSION}.tar.gz" \
     && tar -C /tmp -xf /tmp/pkrenv.tar.gz \
     && mv "/tmp/pkrenv-${PKRENV_VERSION}/bin"/* /usr/local/bin/ \
