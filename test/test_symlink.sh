@@ -60,14 +60,14 @@ ln -s "${PWD}"/bin/* "${PKRENV_BIN_DIR}";
 
 cleanup || log 'error' 'Cleanup failed?!';
 
-log 'info' '## Installing 0.8.2';
-${PKRENV_BIN_DIR}/pkrenv install 0.8.2 || error_and_proceed 'Install failed';
+log 'info' '## Installing 1.4.5';
+${PKRENV_BIN_DIR}/pkrenv install 1.4.5 || error_and_proceed 'Install failed';
 
-log 'info' '## Using 0.8.2';
-${PKRENV_BIN_DIR}/pkrenv use 0.8.2 || error_and_proceed 'Use failed';
+log 'info' '## Using 1.4.5';
+${PKRENV_BIN_DIR}/pkrenv use 1.4.5 || error_and_proceed 'Use failed';
 
-log 'info' '## Check-Version for 0.8.2';
-check_active_version 0.8.2 || error_and_proceed 'Version check failed';
+log 'info' '## Check-Version for 1.4.5';
+check_active_version 1.4.5 || error_and_proceed 'Version check failed';
 
 if [ "${#errors[@]}" -gt 0 ]; then
   log 'warn' '===== The following symlink tests failed =====';

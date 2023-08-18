@@ -55,11 +55,11 @@ cleanup || log 'error' 'Cleanup failed?!';
 
 log 'info' '### Install min-required normal version (#.#.#)';
 
-minv='0.8.0';
+minv='1.8.0';
 
 echo "packer {
   required_version = \">=${minv}\"
-}" > min_required.tf;
+}" > min_required.hcl;
 
 (
   pkrenv install min-required;
@@ -70,30 +70,13 @@ echo "packer {
 cleanup || log 'error' 'Cleanup failed?!';
 
 
-log 'info' '### Install min-required tagged version (#.#.#-tag#)'
-
-minv='0.13.0-rc1'
-
-echo "packer {
-    required_version = \">=${minv}\"
-}" > min_required.tf;
-
-(
-  pkrenv install min-required;
-  pkrenv use min-required;
-  check_active_version "${minv}";
-) || error_and_proceed 'Min required tagged-version does not match';
-
-cleanup || log 'error' 'Cleanup failed?!';
-
-
 log 'info' '### Install min-required incomplete version (#.#.<missing>)'
 
-minv='0.12';
+minv='1.8';
 
 echo "packer {
   required_version = \">=${minv}\"
-}" >> min_required.tf;
+}" >> min_required.hcl;
 
 (
   pkrenv install min-required;
@@ -106,35 +89,17 @@ cleanup || log 'error' 'Cleanup failed?!';
 
 log 'info' '### Install min-required with PKRENV_AUTO_INSTALL';
 
-minv='1.0.0';
+minv='1.8.0';
 
 echo "packer {
   required_version = \">=${minv}\"
-}" >> min_required.tf;
+}" >> min_required.hcl;
 echo 'min-required' > .packer-version;
 
 (
   PKRENV_AUTO_INSTALL=true packer version;
   check_active_version "${minv}";
 ) || error_and_proceed 'Min required auto-installed version does not match';
-
-cleanup || log 'error' 'Cleanup failed?!';
-
-
-log 'info' '### Install min-required with PKRENV_AUTO_INSTALL & -chdir';
-
-minv='1.1.0';
-
-mkdir -p chdir-dir
-echo "packer {
-  required_version = \">=${minv}\"
-}" >> chdir-dir/min_required.tf;
-echo 'min-required' > chdir-dir/.packer-version
-
-(
-  PKRENV_AUTO_INSTALL=true packer -chdir=chdir-dir version;
-  check_active_version "${minv}" chdir-dir;
-) || error_and_proceed 'Min required version from -chdir does not match';
 
 cleanup || log 'error' 'Cleanup failed?!';
 

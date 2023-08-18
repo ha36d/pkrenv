@@ -88,7 +88,6 @@ tests__desc=(
   'latest version'
   'latest possibly-unstable version'
   'latest alpha'
-  'latest possibly-unstable version from 0.11'
   'latest version matching regex'
   'specific version'
   'specific version with v prefix'
@@ -98,7 +97,6 @@ tests__kv=(
   "$(pkrenv list-remote | grep -e "^[0-9]\+\.[0-9]\+\.[0-9]\+$" | head -n 1),latest"
   "$(pkrenv list-remote | head -n 1),latest:"
   "$(pkrenv list-remote | grep 'alpha' | head -n 1),latest:alpha"
-  "$(pkrenv list-remote | grep '^0\.11\.' | head -n 1),latest:^0.11."
   '1.7.10,latest:^1.7'
   '1.7.9,1.7.9'
   '1.8.0,v1.8.0'

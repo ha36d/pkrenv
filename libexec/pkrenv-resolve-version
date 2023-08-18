@@ -60,7 +60,7 @@ done;
 # If on MacOS with Homebrew, use GNU grep
 # This allows keybase login detection to work on Mac,
 # and is required to be able to detect packer version
-# from "required_version" setting in "*.tf" files
+# from "required_version" setting in "*.hcl" files
 check_dependencies;
 
 #####################
@@ -129,7 +129,7 @@ fi;
 
 if [[ "${version_requested}" =~ ^latest-allowed$ ]]; then
   log 'debug' 'Detecting latest allowable version...';
-  version_spec="$(grep -h required_version "${PKRENV_DIR:-$(pwd)}"/{*.tf,*.tf.json} 2>/dev/null | rev | cut -d'"' -f2 | rev | cut -d, -f1)";
+  version_spec="$(grep -h required_version "${PKRENV_DIR:-$(pwd)}"/{*.hcl,*.json} 2>/dev/null | rev | cut -d'"' -f2 | rev | cut -d, -f1)";
   version_num="$(echo "${version_spec}" | sed -E 's/[^0-9.]+//')";
   log 'debug' "Using ${version_num} from version spec: ${version_spec}";
 

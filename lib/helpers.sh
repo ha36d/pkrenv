@@ -84,12 +84,8 @@ export -f curlw;
 
 function check_active_version() {
   local v="${1}";
-  local maybe_chdir=;
-  if [ -n "${2:-}" ]; then
-      maybe_chdir="-chdir=${2}";
-  fi;
 
-  local active_version="$(${PKRENV_ROOT}/bin/packer ${maybe_chdir} version | grep '^Packer')";
+  local active_version="$(${PKRENV_ROOT}/bin/packer version | grep '^Packer')";
 
   if ! grep -E "^Packer v${v}((-dev)|( \([a-f0-9]+\)))?( is already installed)?\$" <(echo "${active_version}"); then
     log 'debug' "Expected version ${v} but found ${active_version}";
@@ -124,12 +120,10 @@ function cleanup() {
   rm -rf ./versions;
   log 'debug' "Deleting ${pwd}/.packer-version";
   rm -rf ./.packer-version;
-  log 'debug' "Deleting ${pwd}/latest_allowed.tf";
-  rm -rf ./latest_allowed.tf;
-  log 'debug' "Deleting ${pwd}/min_required.tf";
-  rm -rf ./min_required.tf;
-  log 'debug' "Deleting ${pwd}/chdir-dir";
-  rm -rf ./chdir-dir;
+  log 'debug' "Deleting ${pwd}/latest_allowed.hcl";
+  rm -rf ./latest_allowed.hcl;
+  log 'debug' "Deleting ${pwd}/min_required.hcl";
+  rm -rf ./min_required.hcl;
 };
 export -f cleanup;
 

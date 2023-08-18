@@ -59,7 +59,7 @@ done;
 # If on MacOS with Homebrew, use GNU grep
 # This allows keybase login detection to work on Mac,
 # and is required to be able to detect packer version
-# from "required_version" setting in "*.tf" files
+# from "required_version" setting in "*.hcl" files
 check_dependencies;
 
 #####################

@@ -3,12 +3,6 @@
 set -uo pipefail;
 
 function pkrenv-exec() {
-  for _arg in ${@:1}; do
-    if [[ "${_arg}" == -chdir=* ]]; then
-      log 'debug' "Found -chdir arg. Setting PKRENV_DIR to: ${_arg#-chdir=}";
-      export PKRENV_DIR="${PWD}/${_arg#-chdir=}";
-    fi;
-  done;
 
   log 'debug' 'Getting version from pkrenv-version-name';
   PKRENV_VERSION="$(pkrenv-version-name)" \

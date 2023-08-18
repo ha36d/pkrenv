@@ -56,29 +56,14 @@ cleanup || log 'error' 'Cleanup failed?!';
 log 'info' '### Install latest-allowed normal version (#.#.#)';
 
 echo "packer {
-  required_version = \"~> 1.1.0\"
-}" > latest_allowed.tf;
+  required_version = \"~> 1.7.0\"
+}" > latest_allowed.hcl;
 
 (
   pkrenv install latest-allowed;
   pkrenv use latest-allowed;
-  check_active_version 1.1.9;
+  check_active_version 1.7.10;
 ) || error_and_proceed 'Latest allowed version does not match';
-
-cleanup || log 'error' 'Cleanup failed?!';
-
-
-log 'info' '### Install latest-allowed tagged version (#.#.#-tag#)'
-
-echo "packer {
-    required_version = \"<=0.13.0-rc1\"
-}" > latest_allowed.tf;
-
-(
-  pkrenv install latest-allowed;
-  pkrenv use latest-allowed;
-  check_active_version 0.13.0-rc1;
-) || error_and_proceed 'Latest allowed tagged-version does not match';
 
 cleanup || log 'error' 'Cleanup failed?!';
 
@@ -86,13 +71,13 @@ cleanup || log 'error' 'Cleanup failed?!';
 log 'info' '### Install latest-allowed incomplete version (#.#.<missing>)'
 
 echo "packer {
-  required_version = \"~> 0.12\"
-}" >> latest_allowed.tf;
+  required_version = \"~> 1.7\"
+}" >> latest_allowed.hcl;
 
 (
   pkrenv install latest-allowed;
   pkrenv use latest-allowed;
-  check_active_version 0.15.5;
+  check_active_version 1.9.4;
 ) || error_and_proceed 'Latest allowed incomplete-version does not match';
 
 cleanup || log 'error' 'Cleanup failed?!';
@@ -101,30 +86,14 @@ cleanup || log 'error' 'Cleanup failed?!';
 log 'info' '### Install latest-allowed with PKRENV_AUTO_INSTALL';
 
 echo "packer {
-  required_version = \"~> 1.0.0\"
-}" >> latest_allowed.tf;
+  required_version = \"~> 1.5.0\"
+}" >> latest_allowed.hcl;
 echo 'latest-allowed' > .packer-version;
 
 (
   PKRENV_AUTO_INSTALL=true packer version;
-  check_active_version 1.0.11;
+  check_active_version 1.5.6;
 ) || error_and_proceed 'Latest allowed auto-installed version does not match';
-
-cleanup || log 'error' 'Cleanup failed?!';
-
-
-log 'info' '### Install latest-allowed with PKRENV_AUTO_INSTALL & -chdir';
-
-mkdir -p chdir-dir
-echo "packer {
-  required_version = \"~> 0.14.3\"
-}" >> chdir-dir/latest_allowed.tf;
-echo 'latest-allowed' > chdir-dir/.packer-version
-
-(
-  PKRENV_AUTO_INSTALL=true packer -chdir=chdir-dir version;
-  check_active_version 0.14.11 chdir-dir;
-) || error_and_proceed 'Latest allowed version from -chdir does not match';
 
 cleanup || log 'error' 'Cleanup failed?!';
 

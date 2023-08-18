@@ -109,9 +109,9 @@ case "$(uname -m)" in
     case "${kernel}" in
       "linux")
         # There is no arm64 support for versions:
-        # < 0.11.15
-        # >= 0.12.0, < 0.12.30
-        # >= 0.13.0, < 0.13.5
+        # < 1.0.1
+        # >= 1.2.3, < 1.3.1
+        # >= 1.3.5, < 1.4.1
         if [[ "${version}" =~ 0\.(([0-9]|10))\.\d* ||
               "${version}" =~ 0\.11\.(([0-9]|1[0-4]))$ ||
               "${version}" =~ 0\.12\.(([0-9]|[1-2][0-9]))$ ||
@@ -208,7 +208,7 @@ download_signature() {
 # If on MacOS with Homebrew, use GNU grep
 # This allows keybase login detection to work on Mac,
 # and is required to be able to detect packer version
-# from "required_version" setting in "*.tf" files
+# from "required_version" setting in "*.hcl" files
 check_dependencies;
 
 # Verify signature if verification mechanism (keybase, gpg, etc) is present
