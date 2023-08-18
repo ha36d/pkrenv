@@ -95,9 +95,9 @@ See [required_version](https://www.packer.io/docs/configuration/packer.html) doc
 
 ```console
 $ pkrenv install
-$ pkrenv install 0.7.0
+$ pkrenv install 1.9.0
 $ pkrenv install latest
-$ pkrenv install latest:^0.8
+$ pkrenv install latest:^1.9
 $ pkrenv install latest-allowed
 $ pkrenv install min-required
 ```
@@ -393,7 +393,7 @@ If no parameter is passed, the version to use is resolved automatically via [.pa
 ```console
 $ pkrenv use
 $ pkrenv use min-required
-$ pkrenv use 0.7.0
+$ pkrenv use 1.9.0
 $ pkrenv use latest
 $ pkrenv use latest:^0.8
 ```
@@ -407,9 +407,9 @@ Uninstall a specific version of Packer
 `latest:<regex>` is a syntax to uninstall latest version matching regex (used by grep -e)
 
 ```console
-$ pkrenv uninstall 0.7.0
+$ pkrenv uninstall 1.9.0
 $ pkrenv uninstall latest
-$ pkrenv uninstall latest:^0.8
+$ pkrenv uninstall latest:^1.9
 ```
 
 ### pkrenv list
@@ -418,15 +418,8 @@ List installed versions
 
 ```console
 $ pkrenv list
-* 0.10.7 (set by /opt/pkrenv/version)
-  0.9.0-beta2
-  0.8.8
-  0.8.4
-  0.7.0
-  0.7.0-rc4
-  0.6.16
-  0.6.2
-  0.6.1
+* 1.9.3 (set by /opt/pkrenv/version)
+  1.7.10
 ```
 
 ### pkrenv list-remote
@@ -435,24 +428,119 @@ List installable versions
 
 ```console
 $ pkrenv list-remote
-0.9.0-beta2
-0.9.0-beta1
-0.8.8
-0.8.7
+1.9.3
+1.9.2
+1.9.1
+1.9.0
+1.9.0-alpha
+1.8.7
+1.8.6
+1.8.5
+1.8.4
+1.8.3
+1.8.2
+1.8.1
+1.8.0
+1.7.10
+1.7.9
+1.7.8
+1.7.7
+1.7.6
+1.7.5
+1.7.4
+1.7.3
+1.7.2
+1.7.1
+1.7.0
+1.6.6
+1.6.5
+1.6.4
+1.6.3
+1.6.2
+1.6.1
+1.6.0
+1.5.6
+1.5.5
+1.5.4
+1.5.3
+1.5.2
+1.5.1
+1.5.0
+1.4.5
+1.4.4
+1.4.3
+1.4.2
+1.4.1
+1.4.0
+1.3.5
+1.3.4
+1.3.3
+1.3.2
+1.3.1
+1.3.0
+1.2.5
+1.2.4
+1.2.3
+1.2.2
+1.2.1
+1.2.0
+1.1.3
+1.1.2
+1.1.1
+1.1.0
+1.0.4
+1.0.3
+1.0.2
+1.0.1
+1.0.0
+0.12.3
+0.12.2
+0.12.1
+0.12.0
+0.11.0
+0.10.2
+0.10.1
+0.10.0
+0.9.0
 0.8.6
 0.8.5
-0.8.4
 0.8.3
 0.8.2
 0.8.1
 0.8.0
-0.8.0-rc3
-0.8.0-rc2
-0.8.0-rc1
-0.8.0-beta2
-0.8.0-beta1
-0.7.13
-0.7.12
+0.7.5
+0.7.2
+0.7.1
+0.7.0
+0.6.1
+0.6.0
+0.5.2
+0.5.1
+0.5.0
+0.4.1
+0.4.0
+0.3.11
+0.3.10
+0.3.9
+0.3.8
+0.3.7
+0.3.6
+0.3.5
+0.3.4
+0.3.3
+0.3.2
+0.3.1
+0.3.0
+0.2.3
+0.2.2
+0.2.1
+0.2.0
+0.1.5
+0.1.4
+0.1.3
+0.1.2
+0.1.1
+0.1.0
 ...
 ```
 
