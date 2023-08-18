@@ -88,10 +88,7 @@ tests__desc=(
   'latest version'
   'latest possibly-unstable version'
   'latest alpha'
-  'latest beta'
-  'latest rc'
   'latest possibly-unstable version from 0.11'
-  '0.11.15-oci'
   'latest version matching regex'
   'specific version'
   'specific version with v prefix'
@@ -101,13 +98,10 @@ tests__kv=(
   "$(pkrenv list-remote | grep -e "^[0-9]\+\.[0-9]\+\.[0-9]\+$" | head -n 1),latest"
   "$(pkrenv list-remote | head -n 1),latest:"
   "$(pkrenv list-remote | grep 'alpha' | head -n 1),latest:alpha"
-  "$(pkrenv list-remote | grep 'beta' | head -n 1),latest:beta"
-  "$(pkrenv list-remote | grep 'rc' | head -n 1),latest:rc"
   "$(pkrenv list-remote | grep '^0\.11\.' | head -n 1),latest:^0.11."
-  '0.11.15-oci,0.11.15-oci'
-  '0.8.8,latest:^0.8'
-  '0.7.13,0.7.13'
-  '0.14.6,v0.14.6'
+  '1.7.10,latest:^1.7'
+  '1.7.9,1.7.9'
+  '1.8.0,v1.8.0'
 );
 
 tests_count=${#tests__desc[@]};

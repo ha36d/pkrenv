@@ -53,7 +53,7 @@ declare -a errors=();
 log 'info' '### List local versions';
 cleanup || log 'error' "Cleanup failed?!";
 
-for v in 0.7.2 0.7.13 0.9.1 0.9.2 v0.9.11 0.14.6; do
+for v in 0.7.2 0.7.5 0.9.0 0.12.2 v1.4.3 1.8.6; do
   log 'info' "## Installing version ${v} to construct list";
   pkrenv install "${v}" \
     && log 'debug' "Install of version ${v} succeeded" \
@@ -65,16 +65,16 @@ pkrenv list \
   && log 'debug' "List succeeded with no default set" \
   || error_and_proceed "List failed with no default set";
 
-pkrenv use 0.14.6;
+pkrenv use 1.8.6;
 
 log 'info' '## Comparing "pkrenv list" with default set';
 result="$(pkrenv list)";
 expected="$(cat << EOS
-* 0.14.6 (set by $(pkrenv version-file))
-  0.9.11
-  0.9.2
-  0.9.1
-  0.7.13
+* 1.8.6 (set by $(pkrenv version-file))
+  1.4.3
+  0.12.2
+  0.9.0
+  0.7.5
   0.7.2
 EOS
 )";

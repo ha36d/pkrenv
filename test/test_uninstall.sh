@@ -63,19 +63,17 @@ log 'info' '### Test Suite: Uninstall Local Versions';
 cleanup || log 'error' 'Cleanup failed?!';
 
 tests__keywords=(
-  '0.9.1'
-  '0.11.15-oci'
+  '1.7.9'
   'latest'
-  'latest:^0.8'
-  'v0.14.6'
+  'latest:^1.7'
+  'v1.8.0'
 );
 
 tests__versions=(
-  '0.9.1'
-  '0.11.15-oci'
+  '1.7.9'
   "$(pkrenv list-remote | head -n1)"
-  "$(pkrenv list-remote | grep -e "^0.8" | head -n1)"
-  '0.14.6'
+  "$(pkrenv list-remote | grep -e "^1.7" | head -n1)"
+  '1.8.0'
 );
 
 tests_count=${#tests__keywords[@]};
