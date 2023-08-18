@@ -1,7 +1,7 @@
 versions/
 version
-.terraform-version
-bin/terraform-*
+.packer-version
+bin/packer-*
 /use-gnupg
 /use-gpgv
 .*.swp

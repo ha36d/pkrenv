@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -uo pipefail;
+
+echo 'Usage: pkrenv <command> [<options>]
+
+Commands:
+   install       Install a specific version of Packer
+   use           Switch a version to use
+   uninstall     Uninstall a specific version of Packer
+   list          List all installed versions
+   list-remote   List all installable versions
+   version-name  Print current version
+   init          Update environment to use 'pkrenv' correctly.
+   pin           Write the current active version to ./.packer-version
+';
+
+exit 0;

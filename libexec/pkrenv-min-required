@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Usage: pkrenv min-required
+# Summary: Detect the minimal required version from *tf files
 
 set -uo pipefail;
 
@@ -27,7 +29,7 @@ if [ -z "${PKRENV_ROOT:-""}" ]; then
   };
 
   PKRENV_ROOT="$(cd "$(dirname "$(readlink_f "${0}")")/.." && pwd)";
-  [ -n ${PKRENV_ROOT} ] || early_death "Failed to 'cd \"\$(dirname \"\$(readlink_f \"${0}\")\")/..\" && pwd' while trying to determine PKRENV_ROOT";
+  [ -n "${PKRENV_ROOT}" ] || early_death "Failed to 'cd \"\$(dirname \"\$(readlink_f \"${0}\")\")/..\" && pwd' while trying to determine PKRENV_ROOT";
 else
   PKRENV_ROOT="${PKRENV_ROOT%/}";
 fi;
@@ -44,40 +46,32 @@ else
   fi;
 fi;
 
+# Ensure libexec and bin are in $PATH
+for dir in libexec bin; do
+  case ":${PATH}:" in
+    *:${PKRENV_ROOT}/${dir}:*) log 'debug' "\$PATH already contains '${PKRENV_ROOT}/${dir}', not adding it again";;
+    *)
+      log 'debug' "\$PATH does not contain '${PKRENV_ROOT}/${dir}', prepending and exporting it now";
+      export PATH="${PKRENV_ROOT}/${dir}:${PATH}";
+      ;;
+  esac;
+done;
+
 #####################
 # Begin Script Body #
 #####################
 
-declare -a errors=();
+bailout() {
+  log 'error' 'Error: Could not determine required_version based on your packer sources.
+Make sure at least one of your *tf  or *.tf.json files includes a required version section like
+packer {
+  required_version = ">= 0.0.0"
+}
 
-log 'info' '### Testing symlink functionality';
+see https://www.packer.io/docs/configuration/packer.html for details';
+};
 
-PKRENV_BIN_DIR='/tmp/pkrenv-test';
-log 'info' "## Creating/clearing ${PKRENV_BIN_DIR}"
-rm -rf "${PKRENV_BIN_DIR}" && mkdir "${PKRENV_BIN_DIR}";
-log 'info' "## Symlinking ${PWD}/bin/* into ${PKRENV_BIN_DIR}";
-ln -s "${PWD}"/bin/* "${PKRENV_BIN_DIR}";
-
-cleanup || log 'error' 'Cleanup failed?!';
-
-log 'info' '## Installing 0.8.2';
-${PKRENV_BIN_DIR}/pkrenv install 0.8.2 || error_and_proceed 'Install failed';
-
-log 'info' '## Using 0.8.2';
-${PKRENV_BIN_DIR}/pkrenv use 0.8.2 || error_and_proceed 'Use failed';
-
-log 'info' '## Check-Version for 0.8.2';
-check_active_version 0.8.2 || error_and_proceed 'Version check failed';
-
-if [ "${#errors[@]}" -gt 0 ]; then
-  log 'warn' '===== The following symlink tests failed =====';
-  for error in "${errors[@]}"; do
-    log 'warn' "\t${error}";
-  done;
-  log 'error' 'Symlink test failure(s)';
-  exit 1;
-else
-  log 'info' 'All symlink tests passed.';
-fi;
-
-exit 0;
+declare min_required="$(pkrenv-min-required "${PKRENV_DIR:-$(pwd)}")";
+[[ -n "${min_required}" ]] \
+  && echo "${min_required}" \
+  || bailout;

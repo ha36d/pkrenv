@@ -2,8 +2,8 @@
 
 set -uo pipefail;
 
-function tfenv-min-required() {
-  local path="${1:-${TFENV_DIR:-.}}";
+function pkrenv-min-required() {
+  local path="${1:-${PKRENV_DIR:-.}}";
 
   local versions="$( echo $(cat ${path}/{*.tf,*.tf.json} 2>/dev/null | grep -Eh '^\s*[^#]*\s*required_version') | grep -o '[~=!<>]\{0,2\}\s*\([0-9]\+\.\?\)\{2,3\}\(-[a-z]\+[0-9]\+\)\?')";
 
@@ -15,8 +15,8 @@ function tfenv-min-required() {
     else
       local min_required_file="$(grep -Hn required_version ${path}/{*.tf,*.tf.json} 2>/dev/null | xargs)";
 
-      # Probably not an advisable way to choose a terraform version,
-      # but this is the way this functionality works in terraform:
+      # Probably not an advisable way to choose a packer version,
+      # but this is the way this functionality works in packer:
       # add .0 to versions without a minor and/or patch version (e.g. 12.0)
       while ! [[ "${found_min_required}" =~ [0-9]+\.[0-9]+\.[0-9]+ ]]; do
         found_min_required="${found_min_required}.0";
@@ -30,4 +30,4 @@ function tfenv-min-required() {
 
   log 'debug' 'Appropriate required_version not found, skipping min-required';
 };
-export -f tfenv-min-required;
+export -f pkrenv-min-required;

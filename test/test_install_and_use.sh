@@ -10,36 +10,36 @@ function early_death() {
   exit 1;
 };
 
-if [ -z "${TFENV_ROOT:-""}" ]; then
+if [ -z "${PKRENV_ROOT:-""}" ]; then
   # http://stackoverflow.com/questions/1055671/how-can-i-get-the-behavior-of-gnus-readlink-f-on-a-mac
   readlink_f() {
     local target_file="${1}";
     local file_name;
 
     while [ "${target_file}" != "" ]; do
-      cd "$(dirname ${target_file})" || early_death "Failed to 'cd \$(dirname ${target_file})' while trying to determine TFENV_ROOT";
-      file_name="$(basename "${target_file}")" || early_death "Failed to 'basename \"${target_file}\"' while trying to determine TFENV_ROOT";
+      cd "$(dirname ${target_file})" || early_death "Failed to 'cd \$(dirname ${target_file})' while trying to determine PKRENV_ROOT";
+      file_name="$(basename "${target_file}")" || early_death "Failed to 'basename \"${target_file}\"' while trying to determine PKRENV_ROOT";
       target_file="$(readlink "${file_name}")";
     done;
 
     echo "$(pwd -P)/${file_name}";
   };
 
-  TFENV_ROOT="$(cd "$(dirname "$(readlink_f "${0}")")/.." && pwd)";
-  [ -n ${TFENV_ROOT} ] || early_death "Failed to 'cd \"\$(dirname \"\$(readlink_f \"${0}\")\")/..\" && pwd' while trying to determine TFENV_ROOT";
+  PKRENV_ROOT="$(cd "$(dirname "$(readlink_f "${0}")")/.." && pwd)";
+  [ -n ${PKRENV_ROOT} ] || early_death "Failed to 'cd \"\$(dirname \"\$(readlink_f \"${0}\")\")/..\" && pwd' while trying to determine PKRENV_ROOT";
 else
-  TFENV_ROOT="${TFENV_ROOT%/}";
+  PKRENV_ROOT="${PKRENV_ROOT%/}";
 fi;
-export TFENV_ROOT;
+export PKRENV_ROOT;
 
-if [ -n "${TFENV_HELPERS:-""}" ]; then
-  log 'debug' 'TFENV_HELPERS is set, not sourcing helpers again';
+if [ -n "${PKRENV_HELPERS:-""}" ]; then
+  log 'debug' 'PKRENV_HELPERS is set, not sourcing helpers again';
 else
-  [ "${TFENV_DEBUG:-0}" -gt 0 ] && echo "[DEBUG] Sourcing helpers from ${TFENV_ROOT}/lib/helpers.sh";
-  if source "${TFENV_ROOT}/lib/helpers.sh"; then
+  [ "${PKRENV_DEBUG:-0}" -gt 0 ] && echo "[DEBUG] Sourcing helpers from ${PKRENV_ROOT}/lib/helpers.sh";
+  if source "${PKRENV_ROOT}/lib/helpers.sh"; then
     log 'debug' 'Helpers sourced successfully';
   else
-    early_death "Failed to source helpers from ${TFENV_ROOT}/lib/helpers.sh";
+    early_death "Failed to source helpers from ${PKRENV_ROOT}/lib/helpers.sh";
   fi;
 fi;
 
@@ -51,9 +51,9 @@ test_install_and_use() {
   # Takes a static version and the optional keyword to install it with
   local k="${2-""}";
   local v="${1}";
-  tfenv install "${k}" || return 1;
+  pkrenv install "${k}" || return 1;
   check_installed_version "${v}" || return 1;
-  tfenv use "${k}" || return 1;
+  pkrenv use "${k}" || return 1;
   check_active_version "${v}" || return 1;
   return 0;
 };
@@ -62,10 +62,10 @@ test_install_and_use_with_env() {
   # Takes a static version and the optional keyword to install it with
   local k="${2-""}";
   local v="${1}";
-  TFENV_TERRAFORM_VERSION="${k}" tfenv install || return 1;
+  PKRENV_PACKER_VERSION="${k}" pkrenv install || return 1;
   check_installed_version "${v}" || return 1;
-  TFENV_TERRAFORM_VERSION="${k}" tfenv use || return 1;
-  TFENV_TERRAFORM_VERSION="${k}" check_active_version "${v}" || return 1;
+  PKRENV_PACKER_VERSION="${k}" pkrenv use || return 1;
+  PKRENV_PACKER_VERSION="${k}" check_active_version "${v}" || return 1;
   return 0;
 };
 
@@ -73,9 +73,9 @@ test_install_and_use_overridden() {
   # Takes a static version and the optional keyword to install it with
   local k="${2-""}";
   local v="${1}";
-  tfenv install "${k}" || return 1;
+  pkrenv install "${k}" || return 1;
   check_installed_version "${v}" || return 1;
-  tfenv use "${k}" || return 1;
+  pkrenv use "${k}" || return 1;
   check_default_version "${v}" || return 1;
   return 0;
 };
@@ -98,12 +98,12 @@ tests__desc=(
 );
 
 tests__kv=(
-  "$(tfenv list-remote | grep -e "^[0-9]\+\.[0-9]\+\.[0-9]\+$" | head -n 1),latest"
-  "$(tfenv list-remote | head -n 1),latest:"
-  "$(tfenv list-remote | grep 'alpha' | head -n 1),latest:alpha"
-  "$(tfenv list-remote | grep 'beta' | head -n 1),latest:beta"
-  "$(tfenv list-remote | grep 'rc' | head -n 1),latest:rc"
-  "$(tfenv list-remote | grep '^0\.11\.' | head -n 1),latest:^0.11."
+  "$(pkrenv list-remote | grep -e "^[0-9]\+\.[0-9]\+\.[0-9]\+$" | head -n 1),latest"
+  "$(pkrenv list-remote | head -n 1),latest:"
+  "$(pkrenv list-remote | grep 'alpha' | head -n 1),latest:alpha"
+  "$(pkrenv list-remote | grep 'beta' | head -n 1),latest:beta"
+  "$(pkrenv list-remote | grep 'rc' | head -n 1),latest:rc"
+  "$(pkrenv list-remote | grep '^0\.11\.' | head -n 1),latest:^0.11."
   '0.11.15-oci,0.11.15-oci'
   '0.8.8,latest:^0.8'
   '0.7.13,0.7.13'
@@ -134,12 +134,12 @@ for ((test_iter=0; test_iter<${tests_count}; ++test_iter )) ; do
   kv="${tests__kv[${test_iter}]}";
   v="${kv%,*}";
   k="${kv##*,}";
-  log 'info' "## ./.terraform-version Test ${test_num}/${tests_count}: ${desc} ( ${k} / ${v} )";
-  log 'info' "Writing ${k} to ./.terraform-version";
-  echo "${k}" > ./.terraform-version;
+  log 'info' "## ./.packer-version Test ${test_num}/${tests_count}: ${desc} ( ${k} / ${v} )";
+  log 'info' "Writing ${k} to ./.packer-version";
+  echo "${k}" > ./.packer-version;
   test_install_and_use "${v}" \
-    && log info "## ./.terraform-version Test ${test_num}/${tests_count}: ${desc} ( ${k} / ${v} ) succeeded" \
-    || error_and_proceed "## ./.terraform-version Test ${test_num}/${tests_count}: ${desc} ( ${k} / ${v} ) failed";
+    && log info "## ./.packer-version Test ${test_num}/${tests_count}: ${desc} ( ${k} / ${v} ) succeeded" \
+    || error_and_proceed "## ./.packer-version Test ${test_num}/${tests_count}: ${desc} ( ${k} / ${v} ) failed";
 done;
 
 for ((test_iter=0; test_iter<${tests_count}; ++test_iter )) ; do
@@ -149,59 +149,59 @@ for ((test_iter=0; test_iter<${tests_count}; ++test_iter )) ; do
   kv="${tests__kv[${test_iter}]}";
   v="${kv%,*}";
   k="${kv##*,}";
-  log 'info' "## TFENV_TERRAFORM_VERSION Test ${test_num}/${tests_count}: ${desc} ( ${k} / ${v} )";
-  log 'info' "Writing 0.0.0 to ./.terraform-version";
-  echo "0.0.0" > ./.terraform-version;
+  log 'info' "## PKRENV_PACKER_VERSION Test ${test_num}/${tests_count}: ${desc} ( ${k} / ${v} )";
+  log 'info' "Writing 0.0.0 to ./.packer-version";
+  echo "0.0.0" > ./.packer-version;
   test_install_and_use_with_env "${v}" "${k}" \
-    && log info "## TFENV_TERRAFORM_VERSION Test ${test_num}/${tests_count}: ${desc} ( ${k} / ${v} ) succeeded" \
-    || error_and_proceed "## TFENV_TERRAFORM_VERSION Test ${test_num}/${tests_count}: ${desc} ( ${k} / ${v} ) failed";
+    && log info "## PKRENV_PACKER_VERSION Test ${test_num}/${tests_count}: ${desc} ( ${k} / ${v} ) succeeded" \
+    || error_and_proceed "## PKRENV_PACKER_VERSION Test ${test_num}/${tests_count}: ${desc} ( ${k} / ${v} ) failed";
 done;
 
 cleanup || log 'error' 'Cleanup failed?!';
-log 'info' '## ${HOME}/.terraform-version Test Preparation';
+log 'info' '## ${HOME}/.packer-version Test Preparation';
 
 # 0.12.22 reports itself as 0.12.21 and breaks testing
-declare v1="$(tfenv list-remote | grep -e "^[0-9]\+\.[0-9]\+\.[0-9]\+$" | grep -v '0.12.22' | head -n 2 | tail -n 1)";
-declare v2="$(tfenv list-remote | grep -e "^[0-9]\+\.[0-9]\+\.[0-9]\+$" | grep -v '0.12.22' | head -n 1)";
+declare v1="$(pkrenv list-remote | grep -e "^[0-9]\+\.[0-9]\+\.[0-9]\+$" | grep -v '0.12.22' | head -n 2 | tail -n 1)";
+declare v2="$(pkrenv list-remote | grep -e "^[0-9]\+\.[0-9]\+\.[0-9]\+$" | grep -v '0.12.22' | head -n 1)";
 
-if [ -f "${HOME}/.terraform-version" ]; then
-  log 'info' "Backing up ${HOME}/.terraform-version to ${HOME}/.terraform-version.bup";
-  mv "${HOME}/.terraform-version" "${HOME}/.terraform-version.bup";
+if [ -f "${HOME}/.packer-version" ]; then
+  log 'info' "Backing up ${HOME}/.packer-version to ${HOME}/.packer-version.bup";
+  mv "${HOME}/.packer-version" "${HOME}/.packer-version.bup";
 fi;
-log 'info' "Writing ${v1} to ${HOME}/.terraform-version";
-echo "${v1}" > "${HOME}/.terraform-version";
+log 'info' "Writing ${v1} to ${HOME}/.packer-version";
+echo "${v1}" > "${HOME}/.packer-version";
 
-log 'info' "## \${HOME}/.terraform-version Test 1/3: Install and Use ( ${v1} )";
+log 'info' "## \${HOME}/.packer-version Test 1/3: Install and Use ( ${v1} )";
 test_install_and_use "${v1}" \
-  && log info "## \${HOME}/.terraform-version Test 1/1: ( ${v1} ) succeeded" \
-  || error_and_proceed "## \${HOME}/.terraform-version Test 1/1: ( ${v1} ) failed";
+  && log info "## \${HOME}/.packer-version Test 1/1: ( ${v1} ) succeeded" \
+  || error_and_proceed "## \${HOME}/.packer-version Test 1/1: ( ${v1} ) failed";
 
-log 'info' "## \${HOME}/.terraform-version Test 2/3: Override Install with Parameter ( ${v2} )";
+log 'info' "## \${HOME}/.packer-version Test 2/3: Override Install with Parameter ( ${v2} )";
 test_install_and_use_overridden "${v2}" "${v2}" \
-  && log info "## \${HOME}/.terraform-version Test 2/3: ( ${v2} ) succeeded" \
-  || error_and_proceed "## \${HOME}/.terraform-version Test 2/3: ( ${v2} ) failed";
+  && log info "## \${HOME}/.packer-version Test 2/3: ( ${v2} ) succeeded" \
+  || error_and_proceed "## \${HOME}/.packer-version Test 2/3: ( ${v2} ) failed";
 
-log 'info' "## \${HOME}/.terraform-version Test 3/3: Override Use with Parameter ( ${v2} )";
+log 'info' "## \${HOME}/.packer-version Test 3/3: Override Use with Parameter ( ${v2} )";
 (
-  tfenv use "${v2}" || exit 1;
+  pkrenv use "${v2}" || exit 1;
   check_default_version "${v2}" || exit 1;
-) && log info "## \${HOME}/.terraform-version Test 3/3: ( ${v2} ) succeeded" \
-  || error_and_proceed "## \${HOME}/.terraform-version Test 3/3: ( ${v2} ) failed";
+) && log info "## \${HOME}/.packer-version Test 3/3: ( ${v2} ) succeeded" \
+  || error_and_proceed "## \${HOME}/.packer-version Test 3/3: ( ${v2} ) failed";
 
-log 'info' '## \${HOME}/.terraform-version Test Cleanup';
-log 'info' "Deleting ${HOME}/.terraform-version";
-rm "${HOME}/.terraform-version";
-if [ -f "${HOME}/.terraform-version.bup" ]; then
-  log 'info' "Restoring backup from ${HOME}/.terraform-version.bup to ${HOME}/.terraform-version";
-  mv "${HOME}/.terraform-version.bup" "${HOME}/.terraform-version";
+log 'info' '## \${HOME}/.packer-version Test Cleanup';
+log 'info' "Deleting ${HOME}/.packer-version";
+rm "${HOME}/.packer-version";
+if [ -f "${HOME}/.packer-version.bup" ]; then
+  log 'info' "Restoring backup from ${HOME}/.packer-version.bup to ${HOME}/.packer-version";
+  mv "${HOME}/.packer-version.bup" "${HOME}/.packer-version";
 fi;
 
 log 'info' '## Use Auto-Install Test 1/2: (No Input)';
 cleanup || log 'error' 'Cleanup failed?!';
 
 (
-  tfenv use || exit 1;
-  check_default_version "$(tfenv list-remote | grep -e "^[0-9]\+\.[0-9]\+\.[0-9]\+$" | head -n 1)" || exit 1;
+  pkrenv use || exit 1;
+  check_default_version "$(pkrenv list-remote | grep -e "^[0-9]\+\.[0-9]\+\.[0-9]\+$" | head -n 1)" || exit 1;
 ) && log info '## Use Auto-Install Test 1/2: (No Input) succeeded' \
   || error_and_proceed '## Use Auto-Install Test 1/2: (No Input) failed';
 
@@ -209,7 +209,7 @@ log 'info' '## Use Auto-Install Test 2/2: (Specific version)';
 cleanup || log 'error' 'Cleanup failed?!';
 
 (
-  tfenv use 1.0.1 || exit 1;
+  pkrenv use 1.0.1 || exit 1;
   check_default_version 1.0.1 || exit 1;
 ) && log info '## Use Auto-Install Test 2/2: (Specific version) succeeded' \
   || error_and_proceed '## Use Auto-Install Test 2/2: (Specific version) failed';
@@ -237,7 +237,7 @@ for ((test_iter=0; test_iter<${neg_tests_count}; ++test_iter )) ; do
   k="${neg_tests__kv[${test_iter}]}";
   expected_error_message="No versions matching '${k}' found in remote";
   log 'info' "##  Invalid Version Test ${test_num}/${neg_tests_count}: ${desc} ( ${k} )";
-  [ -z "$(tfenv install "${k}" 2>&1 | grep "${expected_error_message}")" ] \
+  [ -z "$(pkrenv install "${k}" 2>&1 | grep "${expected_error_message}")" ] \
     && error_and_proceed "Installing invalid version ${k}";
 done;
 

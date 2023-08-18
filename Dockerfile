@@ -6,22 +6,22 @@ RUN apk add --no-cache --purge \
     curl \
     ;
 
-ARG TFENV_VERSION=3.0.0
-RUN wget -O /tmp/tfenv.tar.gz "https://github.com/tfutils/tfenv/archive/refs/tags/v${TFENV_VERSION}.tar.gz" \
-    && tar -C /tmp -xf /tmp/tfenv.tar.gz \
-    && mv "/tmp/tfenv-${TFENV_VERSION}/bin"/* /usr/local/bin/ \
-    && mkdir -p /usr/local/lib/tfenv \
-    && mv "/tmp/tfenv-${TFENV_VERSION}/lib" /usr/local/lib/tfenv/ \
-    && mv "/tmp/tfenv-${TFENV_VERSION}/libexec" /usr/local/lib/tfenv/ \
+ARG PKRENV_VERSION=3.0.0
+RUN wget -O /tmp/pkrenv.tar.gz "https://github.com/ha36d/pkrenv/archive/refs/tags/v${PKRENV_VERSION}.tar.gz" \
+    && tar -C /tmp -xf /tmp/pkrenv.tar.gz \
+    && mv "/tmp/pkrenv-${PKRENV_VERSION}/bin"/* /usr/local/bin/ \
+    && mkdir -p /usr/local/lib/pkrenv \
+    && mv "/tmp/pkrenv-${PKRENV_VERSION}/lib" /usr/local/lib/pkrenv/ \
+    && mv "/tmp/pkrenv-${PKRENV_VERSION}/libexec" /usr/local/lib/pkrenv/ \
     && mkdir -p /usr/local/share/licenses \
-    && mv "/tmp/tfenv-${TFENV_VERSION}/LICENSE" /usr/local/share/licenses/tfenv \
-    && rm -rf /tmp/tfenv* \
+    && mv "/tmp/pkrenv-${PKRENV_VERSION}/LICENSE" /usr/local/share/licenses/pkrenv \
+    && rm -rf /tmp/pkrenv* \
     ;
-ENV TFENV_ROOT /usr/local/lib/tfenv
+ENV PKRENV_ROOT /usr/local/lib/pkrenv
 
-ENV TFENV_CONFIG_DIR /var/tfenv
-VOLUME /var/tfenv
+ENV PKRENV_CONFIG_DIR /var/pkrenv
+VOLUME /var/pkrenv
 
 # Default to latest; user-specifiable
-ENV TFENV_TERRAFORM_VERSION latest
-ENTRYPOINT ["/usr/local/bin/terraform"]
+ENV PKRENV_PACKER_VERSION latest
+ENTRYPOINT ["/usr/local/bin/packer"]

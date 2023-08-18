@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+[ -n "${PKRENV_DEBUG}" ] && set -x;
+
+export PATH="${PKRENV_ROOT}/bin:${PATH}";

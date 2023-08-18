@@ -1,12 +1,12 @@
-![CI](https://github.com/tfutils/tfenv/workflows/CI/badge.svg)
+![CI](https://github.com/ha36d/pkrenv/workflows/CI/badge.svg)
 
-# tfenv
+# pkrenv
 
-[Terraform](https://www.terraform.io/) version manager inspired by [rbenv](https://github.com/rbenv/rbenv)
+[Packer](https://www.packer.io/) version manager inspired by [rbenv](https://github.com/rbenv/rbenv)
 
 ## Support
 
-Currently tfenv supports the following OSes
+Currently pkrenv supports the following OSes
 
 - macOS
   - 64bit
@@ -23,46 +23,46 @@ Currently tfenv supports the following OSes
 Install via Homebrew
 
 ```console
-$ brew install tfenv
+$ brew install pkrenv
 ```
 
 Install via Arch User Repository (AUR)
    
 ```console
-$ yay --sync tfenv
+$ yay --sync pkrenv
 ```
 
 Install via puppet
 
-Using puppet module [sergk-tfenv](https://github.com/SergK/puppet-tfenv)
+Using puppet module [sergk-pkrenv](https://github.com/SergK/puppet-pkrenv)
 
 ```puppet
-include ::tfenv
+include ::pkrenv
 ```
 
 ### Manual
 
-1. Check out tfenv into any path (here is `${HOME}/.tfenv`)
+1. Check out pkrenv into any path (here is `${HOME}/.pkrenv`)
 
 ```console
-$ git clone --depth=1 https://github.com/tfutils/tfenv.git ~/.tfenv
+$ git clone --depth=1 https://github.com/ha36d/pkrenv.git ~/.pkrenv
 ```
 
-2. Add `~/.tfenv/bin` to your `$PATH` any way you like
+2. Add `~/.pkrenv/bin` to your `$PATH` any way you like
 
 ```console
-$ echo 'export PATH="$HOME/.tfenv/bin:$PATH"' >> ~/.bash_profile
+$ echo 'export PATH="$HOME/.pkrenv/bin:$PATH"' >> ~/.bash_profile
 ```
 
   For WSL users
 ```bash
-$ echo 'export PATH=$PATH:$HOME/.tfenv/bin' >> ~/.bashrc
+$ echo 'export PATH=$PATH:$HOME/.pkrenv/bin' >> ~/.bashrc
 ```
 
-  OR you can make symlinks for `tfenv/bin/*` scripts into a path that is already added to your `$PATH` (e.g. `/usr/local/bin`) `OSX/Linux Only!`
+  OR you can make symlinks for `pkrenv/bin/*` scripts into a path that is already added to your `$PATH` (e.g. `/usr/local/bin`) `OSX/Linux Only!`
 
 ```console
-$ ln -s ~/.tfenv/bin/* /usr/local/bin
+$ ln -s ~/.pkrenv/bin/* /usr/local/bin
 ```
 
   On Ubuntu/Debian touching `/usr/local/bin` might require sudo access, but you can create `${HOME}/bin` or `${HOME}/.local/bin` and on next login it will get added to the session `$PATH`
@@ -71,189 +71,189 @@ $ ln -s ~/.tfenv/bin/* /usr/local/bin
 ```console
 $ mkdir -p ~/.local/bin/
 $ . ~/.profile
-$ ln -s ~/.tfenv/bin/* ~/.local/bin
-$ which tfenv
+$ ln -s ~/.pkrenv/bin/* ~/.local/bin
+$ which pkrenv
 ```
 
 ## Usage
 
-### tfenv install [version]
+### pkrenv install [version]
 
-Install a specific version of Terraform.
+Install a specific version of Packer.
 
-If no parameter is passed, the version to use is resolved automatically via [TFENV\_TERRAFORM\_VERSION environment variable](#tfenv_terraform_version) or [.terraform-version files](#terraform-version-file), in that order of precedence, i.e. TFENV\_TERRAFORM\_VERSION, then .terraform-version. The default is 'latest' if none are found.
+If no parameter is passed, the version to use is resolved automatically via [PKRENV\_PACKER\_VERSION environment variable](#pkrenv_packer_version) or [.packer-version files](#packer-version-file), in that order of precedence, i.e. PKRENV\_PACKER\_VERSION, then .packer-version. The default is 'latest' if none are found.
 
 If a parameter is passed, available options:
 
 - `x.y.z` [Semver 2.0.0](https://semver.org/) string specifying the exact version to install
 - `latest` is a syntax to install latest version
 - `latest:<regex>` is a syntax to install latest version matching regex (used by grep -e)
-- `latest-allowed` is a syntax to scan your Terraform files to detect which version is maximally allowed.
-- `min-required` is a syntax to scan your Terraform files to detect which version is minimally required.
+- `latest-allowed` is a syntax to scan your Packer files to detect which version is maximally allowed.
+- `min-required` is a syntax to scan your Packer files to detect which version is minimally required.
 
-See [required_version](https://www.terraform.io/docs/configuration/terraform.html) docs. Also [see min-required & latest-allowed](#min-required) section below.
+See [required_version](https://www.packer.io/docs/configuration/packer.html) docs. Also [see min-required & latest-allowed](#min-required) section below.
 
 ```console
-$ tfenv install
-$ tfenv install 0.7.0
-$ tfenv install latest
-$ tfenv install latest:^0.8
-$ tfenv install latest-allowed
-$ tfenv install min-required
+$ pkrenv install
+$ pkrenv install 0.7.0
+$ pkrenv install latest
+$ pkrenv install latest:^0.8
+$ pkrenv install latest-allowed
+$ pkrenv install min-required
 ```
 
-If `shasum` is present in the path, tfenv will verify the download against Hashicorp's published sha256 hash.
+If `shasum` is present in the path, pkrenv will verify the download against Hashicorp's published sha256 hash.
 If [keybase](https://keybase.io/) is available in the path it will also verify the signature for those published hashes using Hashicorp's published public key.
 
 You can opt-in to using GnuPG tools for PGP signature verification if keybase is not available:
 
-Where `TFENV_INSTALL_DIR` is for example, `~/.tfenv` or `/usr/local/Cellar/tfenv/<version>`
+Where `PKRENV_INSTALL_DIR` is for example, `~/.pkrenv` or `/usr/local/Cellar/pkrenv/<version>`
 
 ```console
-$ echo 'trust-tfenv: yes' > ${TFENV_INSTALL_DIR}/use-gpgv
-$ tfenv install
+$ echo 'trust-pkrenv: yes' > ${PKRENV_INSTALL_DIR}/use-gpgv
+$ pkrenv install
 ```
 
-The `trust-tfenv` directive means that verification uses a copy of the
-Hashicorp OpenPGP key found in the tfenv repository.  Skipping that directive
+The `trust-pkrenv` directive means that verification uses a copy of the
+Hashicorp OpenPGP key found in the pkrenv repository.  Skipping that directive
 means that the Hashicorp key must be in the existing default trusted keys.
-Use the file `${TFENV_INSTALL_DIR}/use-gnupg` to instead invoke the full `gpg` tool and
+Use the file `${PKRENV_INSTALL_DIR}/use-gnupg` to instead invoke the full `gpg` tool and
 see web-of-trust status; beware that a lack of trust path will not cause a
 validation failure.
 
-#### .terraform-version
+#### .packer-version
 
-If you use a [.terraform-version](#terraform-version-file) file, `tfenv install` (no argument) will install the version written in it.
+If you use a [.packer-version](#packer-version-file) file, `pkrenv install` (no argument) will install the version written in it.
 
 <a name="min-required"></a>
 #### min-required & latest-allowed
 
 Please note that we don't do semantic version range parsing but use first ever found version as the candidate for minimally required one. It is up to the user to keep the definition reasonable. I.e.
 
-```terraform
+```packer
 // this will detect 0.12.3
-terraform {
+packer {
   required_version  = "<0.12.3, >= 0.10.0"
 }
 ```
 
-```terraform
+```packer
 // this will detect 0.10.8 (the latest 0.10.x release)
-terraform {
+packer {
   required_version  = "~> 0.10.0, <0.12.3"
 }
 ```
 
 ### Environment Variables
 
-#### TFENV
+#### PKRENV
 
-##### `TFENV_ARCH`
+##### `PKRENV_ARCH`
 
 String (Default: `amd64`)
 
-Specify architecture. Architecture other than the default amd64 can be specified with the `TFENV_ARCH` environment variable
+Specify architecture. Architecture other than the default amd64 can be specified with the `PKRENV_ARCH` environment variable
 
 Note: Default changes to `arm64` for versions that have arm64 builds available when `$(uname -m)` matches `aarch64* | arm64*`
 
 ```console
-$ TFENV_ARCH=arm64 tfenv install 0.7.9
+$ PKRENV_ARCH=arm64 pkrenv install 0.7.9
 ```
 
-##### `TFENV_AUTO_INSTALL`
+##### `PKRENV_AUTO_INSTALL`
 
 String (Default: true)
 
-Should tfenv automatically install terraform if the version specified by defaults or a .terraform-version file is not currently installed.
+Should pkrenv automatically install packer if the version specified by defaults or a .packer-version file is not currently installed.
 
 ```console
-$ TFENV_AUTO_INSTALL=false terraform plan
+$ PKRENV_AUTO_INSTALL=false packer plan
 ```
 
 ```console
-$ terraform use <version that is not yet installed>
+$ packer use <version that is not yet installed>
 ```
 
-##### `TFENV_CURL_OUTPUT`
+##### `PKRENV_CURL_OUTPUT`
 
 Integer (Default: 2)
 
-Set the mechanism used for displaying download progress when downloading terraform versions from the remote server.
+Set the mechanism used for displaying download progress when downloading packer versions from the remote server.
 
 * 2: v1 Behaviour: Pass `-#` to curl
 * 1: Use curl default
 * 0: Pass `-s` to curl
 
-##### `TFENV_DEBUG`
+##### `PKRENV_DEBUG`
 
 Integer (Default: 0)
 
-Set the debug level for TFENV.
+Set the debug level for PKRENV.
 
 * 0: No debug output
 * 1: Simple debug output
 * 2: Extended debug output, with source file names and interactive debug shells on error
 * 3: Debug level 2 + Bash execution tracing
 
-##### `TFENV_REMOTE`
+##### `PKRENV_REMOTE`
 
 String (Default: https://releases.hashicorp.com)
 
 To install from a remote other than the default
 
 ```console
-$ TFENV_REMOTE=https://example.jfrog.io/artifactory/hashicorp
+$ PKRENV_REMOTE=https://example.jfrog.io/artifactory/hashicorp
 ```
 
-##### `TFENV_REVERSE_REMOTE`
+##### `PKRENV_REVERSE_REMOTE`
 
 Integer (Default: 0)
 
 When using a custom remote, such as Artifactory, instead of the Hashicorp servers,
-the list of terraform versions returned by the curl of the remote directory may be inverted.
+the list of packer versions returned by the curl of the remote directory may be inverted.
 In this case the `latest` functionality will not work as expected because it expects the
 versions to be listed in order of release date from newest to oldest. If your remote
-is instead providing a list that is oldes-first, set `TFENV_REVERSE_REMOTE=1` and
+is instead providing a list that is oldes-first, set `PKRENV_REVERSE_REMOTE=1` and
 functionality will be restored.
 
 ```console
-$ TFENV_REVERSE_REMOTE=1 tfenv list-remote
+$ PKRENV_REVERSE_REMOTE=1 pkrenv list-remote
 ```
 
-##### `TFENV_CONFIG_DIR`
+##### `PKRENV_CONFIG_DIR`
 
-Path (Default: `$TFENV_ROOT`)
+Path (Default: `$PKRENV_ROOT`)
 
-The path to a directory where the local terraform versions and configuration files exist.
+The path to a directory where the local packer versions and configuration files exist.
 
 ```console
-TFENV_CONFIG_DIR="$XDG_CONFIG_HOME/tfenv"
+PKRENV_CONFIG_DIR="$XDG_CONFIG_HOME/pkrenv"
 ```
 
-##### `TFENV_TERRAFORM_VERSION`
+##### `PKRENV_PACKER_VERSION`
 
 String (Default: "")
 
-If not empty string, this variable overrides Terraform version, specified in [.terraform-version files](#terraform-version-file).
+If not empty string, this variable overrides Packer version, specified in [.packer-version files](#packer-version-file).
 `latest` and `latest:<regex>` syntax are also supported.
-[`tfenv install`](#tfenv-install-version) and [`tfenv use`](#tfenv-use-version) command also respects this variable.
+[`pkrenv install`](#pkrenv-install-version) and [`pkrenv use`](#pkrenv-use-version) command also respects this variable.
 
 e.g.
 
 ```console
-$ TFENV_TERRAFORM_VERSION=latest:^0.11. terraform --version
+$ PKRENV_PACKER_VERSION=latest:^0.11. packer --version
 ```
 
-##### `TFENV_NETRC_PATH`
+##### `PKRENV_NETRC_PATH`
 
 String (Default: "")
 
-If not empty string, this variable specifies the credentials file used to access the remote location (useful if used in conjunction with TFENV_REMOTE).
+If not empty string, this variable specifies the credentials file used to access the remote location (useful if used in conjunction with PKRENV_REMOTE).
 
 e.g.
 
 ```console
-$ TFENV_NETRC_PATH="$PWD/.netrc.tfenv"
+$ PKRENV_NETRC_PATH="$PWD/.netrc.pkrenv"
 ```
 
 #### Bashlog Logging Library
@@ -278,7 +278,7 @@ The display format for the date as passed to the `date` binary to generate a dat
 
 Integer (Default: 0)
 
-By default, console output from tfenv does not print a date stamp or log severity.
+By default, console output from pkrenv does not print a date stamp or log severity.
 
 To enable this functionality, making normal output equivalent to FILE log output, set to 1.
 
@@ -294,10 +294,10 @@ Each executable logs to its own file.
 e.g.
 
 ```console
-$ BASHLOG_FILE=1 tfenv use latest
+$ BASHLOG_FILE=1 pkrenv use latest
 ```
 
-will log to `/tmp/tfenv-use.log`
+will log to `/tmp/pkrenv-use.log`
 
 ##### `BASHLOG_FILE_PATH`
 
@@ -332,10 +332,10 @@ Each executable logs to its own file.
 e.g.
 
 ```console
-$ BASHLOG_JSON=1 tfenv use latest
+$ BASHLOG_JSON=1 pkrenv use latest
 ```
 
-will log in JSON format to `/tmp/tfenv-use.log.json`
+will log in JSON format to `/tmp/pkrenv-use.log.json`
 
 JSON log content:
 
@@ -378,47 +378,47 @@ Defaults to the PID of the calling process.
 
 
 
-### tfenv use [version]
+### pkrenv use [version]
 
 Switch a version to use
 
-If no parameter is passed, the version to use is resolved automatically via [.terraform-version files](#terraform-version-file) or [TFENV\_TERRAFORM\_VERSION environment variable](#tfenv_terraform_version) (TFENV\_TERRAFORM\_VERSION takes precedence), defaulting to 'latest' if none are found.
+If no parameter is passed, the version to use is resolved automatically via [.packer-version files](#packer-version-file) or [PKRENV\_PACKER\_VERSION environment variable](#pkrenv_packer_version) (PKRENV\_PACKER\_VERSION takes precedence), defaulting to 'latest' if none are found.
 
 `latest` is a syntax to use the latest installed version
 
 `latest:<regex>` is a syntax to use latest installed version matching regex (used by grep -e)
 
-`min-required` will switch to the version minimally required by your terraform sources (see above `tfenv install`)
+`min-required` will switch to the version minimally required by your packer sources (see above `pkrenv install`)
 
 ```console
-$ tfenv use
-$ tfenv use min-required
-$ tfenv use 0.7.0
-$ tfenv use latest
-$ tfenv use latest:^0.8
+$ pkrenv use
+$ pkrenv use min-required
+$ pkrenv use 0.7.0
+$ pkrenv use latest
+$ pkrenv use latest:^0.8
 ```
 
-Note: `tfenv use latest` or `tfenv use latest:<regex>` will find the latest matching version that is already installed. If no matching versions are installed, and TFENV_AUTO_INSTALL is set to `true` (which is the default) the the latest matching version in the remote repository will be installed and used.
+Note: `pkrenv use latest` or `pkrenv use latest:<regex>` will find the latest matching version that is already installed. If no matching versions are installed, and PKRENV_AUTO_INSTALL is set to `true` (which is the default) the the latest matching version in the remote repository will be installed and used.
 
-### tfenv uninstall &lt;version>
+### pkrenv uninstall &lt;version>
 
-Uninstall a specific version of Terraform
+Uninstall a specific version of Packer
 `latest` is a syntax to uninstall latest version
 `latest:<regex>` is a syntax to uninstall latest version matching regex (used by grep -e)
 
 ```console
-$ tfenv uninstall 0.7.0
-$ tfenv uninstall latest
-$ tfenv uninstall latest:^0.8
+$ pkrenv uninstall 0.7.0
+$ pkrenv uninstall latest
+$ pkrenv uninstall latest:^0.8
 ```
 
-### tfenv list
+### pkrenv list
 
 List installed versions
 
 ```console
-$ tfenv list
-* 0.10.7 (set by /opt/tfenv/version)
+$ pkrenv list
+* 0.10.7 (set by /opt/pkrenv/version)
   0.9.0-beta2
   0.8.8
   0.8.4
@@ -429,12 +429,12 @@ $ tfenv list
   0.6.1
 ```
 
-### tfenv list-remote
+### pkrenv list-remote
 
 List installable versions
 
 ```console
-$ tfenv list-remote
+$ pkrenv list-remote
 0.9.0-beta2
 0.9.0-beta1
 0.8.8
@@ -456,50 +456,50 @@ $ tfenv list-remote
 ...
 ```
 
-## .terraform-version file
+## .packer-version file
 
-If you put a `.terraform-version` file on your project root, or in your home directory, tfenv detects it and uses the version written in it. If the version is `latest` or `latest:<regex>`, the latest matching version currently installed will be selected.
+If you put a `.packer-version` file on your project root, or in your home directory, pkrenv detects it and uses the version written in it. If the version is `latest` or `latest:<regex>`, the latest matching version currently installed will be selected.
 
-Note, that [TFENV\_TERRAFORM\_VERSION environment variable](#tfenv_terraform_version) can be used to override version, specified by `.terraform-version` file.
+Note, that [PKRENV\_PACKER\_VERSION environment variable](#pkrenv_packer_version) can be used to override version, specified by `.packer-version` file.
 
 ```console
-$ cat .terraform-version
+$ cat .packer-version
 0.6.16
 
-$ terraform version
-Terraform v0.6.16
+$ packer version
+Packer v0.6.16
 
-Your version of Terraform is out of date! The latest version
-is 0.7.3. You can update by downloading from www.terraform.io
+Your version of Packer is out of date! The latest version
+is 0.7.3. You can update by downloading from www.packer.io
 
-$ echo 0.7.3 > .terraform-version
+$ echo 0.7.3 > .packer-version
 
-$ terraform version
-Terraform v0.7.3
+$ packer version
+Packer v0.7.3
 
-$ echo latest:^0.8 > .terraform-version
+$ echo latest:^0.8 > .packer-version
 
-$ terraform version
-Terraform v0.8.8
+$ packer version
+Packer v0.8.8
 
-$ TFENV_TERRAFORM_VERSION=0.7.3 terraform --version
-Terraform v0.7.3
+$ PKRENV_PACKER_VERSION=0.7.3 packer --version
+Packer v0.7.3
 ```
 
 ## Upgrading
 
 ```console
-$ git --git-dir=~/.tfenv/.git pull
+$ git --git-dir=~/.pkrenv/.git pull
 ```
 
 ## Uninstalling
 
 ```console
-$ rm -rf /some/path/to/tfenv
+$ rm -rf /some/path/to/pkrenv
 ```
 
 ## LICENSE
 
-- [tfenv itself](https://github.com/tfutils/tfenv/blob/master/LICENSE)
+- [tfenv](https://github.com/tfutils/tfenv/blob/master/LICENSE)
 - [rbenv](https://github.com/rbenv/rbenv/blob/master/LICENSE)
-  - tfenv partially uses rbenv's source code
+  - pkrenv partially uses rbenv's and tfenv's source code
