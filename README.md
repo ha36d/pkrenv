@@ -1,4 +1,4 @@
-![CI](https://github.com/ha36d/pkrenv/workflows/CI/badge.svg)
+![CI](https://github.com/ha36d/pkrenv/actions/workflows/test.yml/badge.svg)
 
 # pkrenv
 
