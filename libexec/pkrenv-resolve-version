@@ -13,6 +13,17 @@ function early_death() {
   exit 1;
 };
 
+if [[ "$(uname)" == *"MINGW64"* ]] || [[ "$(uname)" == *"MSYSNT"* ]] || [[ "$(uname)" == *"CYGWINNT"* ]] ; then
+function rev() {
+  (
+    copy=$1
+    len=${#copy}
+    for((i=$len-1;i>=0;i--)); do rev="$rev${copy:$i:1}"; done
+    echo $rev
+  );
+};
+fi;
+
 if [ -z "${PKRENV_ROOT:-""}" ]; then
   # http://stackoverflow.com/questions/1055671/how-can-i-get-the-behavior-of-gnus-readlink-f-on-a-mac
   readlink_f() {
