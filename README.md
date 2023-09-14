@@ -23,6 +23,7 @@ Currently pkrenv supports the following OSes
 Install via Homebrew
 
 ```console
+$ brew tap ha36d/tap
 $ brew install pkrenv
 ```
 
