@@ -14,7 +14,7 @@ Currently pkrenv supports the following OSes
 - Linux
   - 64bit
   - Arm
-- Windows (64bit) - only tested in git-bash - currently presumed failing due to symlink issues in git-bash
+- Windows
 
 ## Installation
 
@@ -25,20 +25,6 @@ Install via Homebrew
 ```console
 $ brew tap ha36d/tap
 $ brew install pkrenv
-```
-
-Install via Arch User Repository (AUR)
-   
-```console
-$ yay --sync pkrenv
-```
-
-Install via puppet
-
-Using puppet module [sergk-pkrenv](https://github.com/SergK/puppet-pkrenv)
-
-```puppet
-include ::pkrenv
 ```
 
 ### Manual
