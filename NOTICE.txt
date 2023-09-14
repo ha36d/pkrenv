@@ -1,0 +1,10 @@
+pkrenv
+Copyright (c) 2023 Hamed Faramarzi
+
+This product includes software from the tfenv project
+ * Copyright (c) 2016 Shinichi Ishimura
+ * https://github.com/tfutils/tfenv/
+
+This product includes software from the rbenv project
+ * Copyright (c) 2013 Sam Stephenson
+ * https://github.com/rbenv/rbenv/
