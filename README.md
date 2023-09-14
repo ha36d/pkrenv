@@ -2,7 +2,7 @@
 
 # pkrenv
 
-[Packer](https://www.packer.io/) version manager inspired by [rbenv](https://github.com/tfutils/tfenv)
+[Packer](https://www.packer.io/) version manager inspired by [tfenv](https://github.com/tfutils/tfenv)
 
 ## Support
 

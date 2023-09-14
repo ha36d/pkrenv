@@ -240,7 +240,7 @@ elif [[ -f "${PKRENV_CONFIG_DIR}/use-gpgv" ]]; then
   download_signature;
   if [[ "${trust_pkrenv}" == 'yes' ]]; then
     ${gpgv_command} \
-      --keyring "${PKRENV_ROOT}/share/hashicorp-keys.pgp" \
+      --keyring "${PKRENV_ROOT}/share/hashicorp-pgp-keys.pgp" \
       "${download_tmp}/${shasums_sig}" \
       "${download_tmp}/${shasums_name}" \
       || log 'error' 'PGP signature rejected';
