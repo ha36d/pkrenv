@@ -43,7 +43,7 @@ if [ "${PKRENV_DEBUG:-0}" -gt 0 ]; then
 fi;
 
 function load_bashlog () {
-  source "${PKRENV_ROOT}/lib/bashlog.sh";
+  source "${PKRENV_ROOT}/lib/pkrenv-bashlog.sh";
 };
 export -f load_bashlog;
 

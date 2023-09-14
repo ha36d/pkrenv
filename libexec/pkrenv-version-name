@@ -37,11 +37,11 @@ export PKRENV_ROOT;
 if [ -n "${PKRENV_HELPERS:-""}" ]; then
   log 'debug' 'PKRENV_HELPERS is set, not sourcing helpers again';
 else
-  [ "${PKRENV_DEBUG:-0}" -gt 0 ] && echo "[DEBUG] Sourcing helpers from ${PKRENV_ROOT}/lib/helpers.sh";
-  if source "${PKRENV_ROOT}/lib/helpers.sh"; then
+  [ "${PKRENV_DEBUG:-0}" -gt 0 ] && echo "[DEBUG] Sourcing helpers from ${PKRENV_ROOT}/lib/pkrev-helpers.sh";
+  if source "${PKRENV_ROOT}/lib/pkrev-helpers.sh"; then
     log 'debug' 'Helpers sourced successfully';
   else
-    early_death "Failed to source helpers from ${PKRENV_ROOT}/lib/helpers.sh";
+    early_death "Failed to source helpers from ${PKRENV_ROOT}/lib/pkrev-helpers.sh";
   fi;
 fi;
 
