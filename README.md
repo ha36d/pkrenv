@@ -575,6 +575,8 @@ $ rm -rf /some/path/to/pkrenv
 
 ## LICENSE
 
+pkrenv uses rbenv's and tfenv's source code.
+
+- [pkrenv](https://github.com/ha36d/pkrenv/blob/master/LICENSE)
 - [tfenv](https://github.com/tfutils/tfenv/blob/master/LICENSE)
 - [rbenv](https://github.com/rbenv/rbenv/blob/master/LICENSE)
-  - pkrenv partially uses rbenv's and tfenv's source code
